@@ -14,7 +14,6 @@ const CreateBlogs = () => {
     (state) => state?.updateAction?.isAuthObject?.token
   );
 
-  console.log("userDescription", userDescription);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

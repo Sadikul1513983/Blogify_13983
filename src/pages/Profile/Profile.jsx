@@ -9,7 +9,7 @@ import { formatDateString } from "../../utils/formatDateString";
 
 
 
-const Profile = ({landingData,setLandingData}) => {
+const Profile = ({landingData}) => {
 
   const profile = useSelector(state=> state?.updateAction?.isAuthObject?.user)
 

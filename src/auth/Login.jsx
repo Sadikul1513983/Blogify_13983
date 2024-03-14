@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { authenticateUser } from "../features/auth/authRegistration";
 import { afterRegistration } from "../features/createRegister/createRegisterSlice";
@@ -7,13 +7,9 @@ import { afterRegistration } from "../features/createRegister/createRegisterSlic
 const Login = () => {
   const [inputEmail, setInputEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const info = useSelector(
-  //   (state) => state?.createRegister?.registerList?.objRegistration
-  // );
 
-  const information = useSelector((state)=>state)
   const navigate = useNavigate();
-  console.log("information", information);
+
   const dispatch = useDispatch();
 
   const handleLogin =async  (email, password, e) => {

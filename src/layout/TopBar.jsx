@@ -11,7 +11,7 @@ const TopBar = () => {
 
 
   const usePortal = () => {
-    setIsVisible(true); // Open the modal when the Link is clicked
+    setIsVisible(true); 
   }
 
   const profile = useSelector(
@@ -21,7 +21,6 @@ const TopBar = () => {
     (state) => state?.createRegister?.afterRegisterList?.isRegistration
   );
 
-  console.log("pro", profile);
 
   const dispatch = useDispatch();
 

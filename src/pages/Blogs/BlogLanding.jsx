@@ -2,7 +2,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import SingleBlog from "./SingleBlog";
-import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 const blogsPerPage = 10;
@@ -13,9 +12,6 @@ const BlogLanding = ({landingData,setLandingData}) => {
   const [hasMore, setHasMore] = useState(true);
   const [popular, setPopular] = useState([]);
   const loaderRef = useRef(null);
-
-  const location = useLocation();
-  const profileInfo = location?.state?.payload?.user;
 
   useEffect(() => {
     const fetchData = async () => {

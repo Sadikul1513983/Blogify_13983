@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   afterRegistration,
   setRegistrationAction,
@@ -15,10 +15,6 @@ const Register = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const auth = useSelector(
-    (state) => state?.createRegister?.afterRegisterList?.isRegistration
-  );
 
   useEffect(() => {
     dispatch(afterRegistration({ isRegistration: false }));

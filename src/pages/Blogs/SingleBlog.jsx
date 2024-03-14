@@ -6,18 +6,14 @@ import edit from "../../assets/icons/edit.svg";
 import deleteIcon from "../../assets/icons/delete.svg";
 import { formatDateString } from "../../utils/formatDateString";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SingleBlog = ({ data, setData, popular }) => {
   const profile = useSelector(
     (state) => state?.updateAction?.isAuthObject?.user
   );
 
-  const navigate = useNavigate();
-  
   let comments = popular?.blogs;
-  console.log("comments", comments);
-  console.log("data", data);
   
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
 
