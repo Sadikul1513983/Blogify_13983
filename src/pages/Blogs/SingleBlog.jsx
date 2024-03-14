@@ -9,14 +9,16 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 const SingleBlog = ({ data, setData, popular }) => {
-  const profileInfo = useSelector(
-    (state) => state?.createRegister?.registerList?.objRegistration
+  const profile = useSelector(
+    (state) => state?.updateAction?.isAuthObject?.user
   );
 
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
+  
   let comments = popular?.blogs;
-
+  console.log("comments", comments);
+  console.log("data", data);
+  
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
 
   const handleEditClick = (e, index) => {
@@ -38,10 +40,6 @@ const SingleBlog = ({ data, setData, popular }) => {
     }
   };
 
-  const handleProfile =(item)=>{
-    navigate('/profile', { state: { item } });
-  }
-
   useEffect(() => {
     document.body.addEventListener("click", handleOutsideClick);
     return () => {
@@ -58,16 +56,16 @@ const SingleBlog = ({ data, setData, popular }) => {
               {Array.isArray(data) &&
                 data?.length > 0 &&
                 data?.map((item, i) => (
-                  <div className="blog-card" key={item?.author?.id}>
+                  <div className="blog-card" key={item?.id}>
                     <img
                       className="blog-thumb"
                       src={item?.thumbnail}
                       alt="thumbnail"
                     />
                     <div className="mt-2 relative">
-                      <Link to="./single-blog.html">
+                      <Link to="/singleBlog" state={{ item }}>
                         <h3 className="text-slate-300 text-xl lg:text-2xl">
-                          <Link to="./single-blog.html">{item?.title}</Link>
+                          <Link to="/singleBlog"  state={{ item }} >{item?.title}</Link>
                         </h3>
                       </Link>
                       <p className="mb-6 text-base text-slate-500 mt-1">
@@ -84,7 +82,10 @@ const SingleBlog = ({ data, setData, popular }) => {
 
                           <div>
                             <h5 className="text-slate-500 text-sm">
-                              <Link onClick={()=>handleProfile(item)}>{`${item?.author?.firstName} ${item?.author?.lastName}`}</Link>
+                              <Link
+                                to="/profile"
+                                state={{ popular }}
+                              >{`${item?.author?.firstName} ${item?.author?.lastName}`}</Link>
                             </h5>
                             <div className="flex items-center text-xs text-slate-700">
                               <span>{formatDateString(item?.createdAt)}</span>
@@ -107,16 +108,22 @@ const SingleBlog = ({ data, setData, popular }) => {
                         </button>
 
                         {selectedRowIndex === i &&
-                          item?.author?.firstName ===
-                            profileInfo?.personFirstName &&
-                          item?.author?.lastName ===
-                            profileInfo?.personLastName && (
+                          item?.author?.firstName === profile?.firstName &&
+                          item?.author?.lastName === profile?.lastName && (
                             <div className="action-modal-container">
                               <button className="action-menu-item hover:text-lwsGreen">
                                 <img src={edit} alt="Edit" />
                                 Edit
                               </button>
-                              <button className="action-menu-item hover:text-red-500">
+                              <button
+                                className="action-menu-item hover:text-red-500"
+                                onClick={() => {
+                                  const remainItem = data?.filter(
+                                    (el) => el?.id !== item?.id
+                                  );
+                                  setData(remainItem);
+                                }}
+                              >
                                 <img src={deleteIcon} alt="Delete" />
                                 Delete
                               </button>

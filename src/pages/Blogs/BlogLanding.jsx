@@ -1,15 +1,21 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import SingleBlog from "./SingleBlog";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 const blogsPerPage = 10;
 
-const BlogLanding = () => {
-  const [landingData, setLandingData] = useState([]);
+const BlogLanding = ({landingData,setLandingData}) => {
+
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [popular, setPopular] = useState([]);
   const loaderRef = useRef(null);
+
+  const location = useLocation();
+  const profileInfo = location?.state?.payload?.user;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,20 +28,20 @@ const BlogLanding = () => {
       }
     };
     fetchData();
-
-    return () => {};
   }, []);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+     const fetchProducts = async () => {
       const response = await fetch(
-        `http://localhost:3000/blogs?limit=${blogsPerPage}?skip=${page * blogsPerPage}`
+        `http://localhost:3000/blogs?limit=${blogsPerPage}?skip=${
+          page * blogsPerPage
+        }`
       );
       const data = await response.json();
 
       if (data.blogs.length === 0) {
         setHasMore(false);
-        alert("No more data available")
+        alert("No more data available");
       } else {
         setLandingData((prevBlogs) => [...prevBlogs, ...data.blogs]);
         setPage((prevPage) => prevPage + 1);

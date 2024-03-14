@@ -1,17 +1,36 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import { authenticateUser } from "../features/auth/authRegistration";
 import { afterRegistration } from "../features/createRegister/createRegisterSlice";
 
 const Login = () => {
   const [inputEmail, setInputEmail] = useState("");
   const [password, setPassword] = useState("");
-  const info = useSelector(
-    (state) => state?.createRegister?.registerList?.objRegistration
-  );
+  // const info = useSelector(
+  //   (state) => state?.createRegister?.registerList?.objRegistration
+  // );
+
+  const information = useSelector((state)=>state)
   const navigate = useNavigate();
-  console.log("info", info);
+  console.log("information", information);
   const dispatch = useDispatch();
+
+  const handleLogin =async  (email, password, e) => {
+    e.preventDefault();
+    try {
+      let response = await dispatch(
+        authenticateUser({email, password })
+      );
+      if(response?.type === "authentication/authenticateUser/fulfilled"){
+        navigate("/",{state:response})
+        dispatch(afterRegistration({ isRegistration: true }));
+      }
+    } catch (error) {
+      console.error("Error occurred during login:", error);
+      alert("An error occurred during login. Please try again later.");
+    }
+  };
 
   return (
     <div className="w-full md:w-1/2 mx-auto bg-[#030317] p-8 rounded-md mt-12">
@@ -52,13 +71,7 @@ const Login = () => {
             type="submit"
             className="w-full bg-indigo-600 text-white p-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
             onClick={(e) => {
-              e.preventDefault();
-              if (parseInt(info?.password) === parseInt(password)) {
-                dispatch(afterRegistration({ isRegistration: true }));
-                navigate("/"); // Navigate to the desired route (e.g., "/")
-              } else {
-                alert("Incorrect Password");
-              }
+              handleLogin(inputEmail, password, e);
             }}
           >
             Login

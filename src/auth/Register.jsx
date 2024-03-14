@@ -2,49 +2,75 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { afterRegistration, setRegistrationAction } from "../features/createRegister/createRegisterSlice";
-
+import {
+  afterRegistration,
+  setRegistrationAction,
+} from "../features/createRegister/createRegisterSlice";
 
 const Register = () => {
   const [personFirstName, setPersonFirstName] = useState("");
   const [personLastName, setPersonLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState();
-  const [isRegistration, setIsRegistration] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const auth = useSelector(
+    (state) => state?.createRegister?.afterRegisterList?.isRegistration
+  );
 
-  const auth = useSelector((state) => state?.createRegister?.afterRegisterList?.isRegistration);
-  console.log("auth",auth);
-
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(afterRegistration({ isRegistration: false }));
-  },[dispatch])
+  }, [dispatch]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (
       personFirstName === "" ||
       personLastName === "" ||
       email === "" ||
       password === ""
     ) {
-      return alert("Please select all fields")
+      return alert("Please fill in all fields");
     }
-    dispatch(
-      setRegistrationAction({
-        isRegistration:false,
-        personFirstName,
-        personLastName,
-        email,
-        password,
-      })
-    );
-    navigate("/");
+  
+    try {
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: personFirstName,
+          lastName: personLastName,
+          email: email,
+          password: password,
+        }),
+      });
+  
+      if (response.ok) {
+        console.log("Registration successful");
+        navigate("/");
+        setEmail("");
+        setPersonFirstName("");
+        setPersonLastName("");
+        setPassword("");
+        dispatch(setRegistrationAction({ personFirstName, personLastName, email, password }));
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to register:", errorData);
+        alert("Failed to register. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error occurred during registration:", error);
+      alert("An error occurred during registration. Please try again later.");
+    }
   };
+  
+  
+
   return (
     <div className="w-full md:w-1/2 mx-auto bg-[#030317] p-8 rounded-md mt-12">
       <h2 className="text-2xl font-bold mb-6">Register</h2>
